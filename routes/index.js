@@ -4,6 +4,8 @@ var router = express.Router();
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
+var bcrypt = require('bcrypt-nodejs');
+
 var todos = [
       {
         id: 8484848484,
@@ -28,14 +30,15 @@ const users = {
     if (user.length > 0) {
       console.log('user.password: ', user[0].password);
       user.validPassword = function(passToCheck) {
-        return passToCheck === user[0].password;
+        var hash = user[0].password;
+        return bcrypt.compareSync(passToCheck, hash);
       };
       callback(null, user);
     } else {
       callback(null, false);
     };
   },
-  list: [{ username: "Bob", password: "ASD" },
+  list: [{ username: "Bob", password: "$2a$10$fmBoV6eHIqiw5ediE1N88OvVCKiT4k4y9IuCTvtjSfLXfFiVBYWxS" },
          { username: "Rob", password: "DSA"}]
 };
 
