@@ -1,0 +1,19 @@
+<div id='login' style=' margin: 30px '>
+	<h3>Login</h3>
+	<form action='/login' method='post'>
+		<p>Username: &nbsp;</p>
+		<input type='text' name='username' id='username' required />
+		<br />
+		<br />
+		<p>Password: &nbsp;</p>
+		<input type='password' name='password' id='password' required />
+		<br />
+		<br />
+		<input type="submit" value="Submit">
+		<br />
+		<br />
+		<h4>Any messages: </h4>
+		<br />
+		<div>{{message}}</div>
+	</form>
+</div>

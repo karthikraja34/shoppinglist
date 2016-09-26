@@ -1,0 +1,9 @@
+-2016-09-25
+* React shopping list app is kind of done for UX for now
+* Need to add MongoDB, Passport for authentication
+
+-2016-09-26
+* Added passport with some limited functionality
+* Need to encrypt and compare passwords
+* Need to add mongoDB
+
