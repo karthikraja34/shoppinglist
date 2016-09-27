@@ -153,7 +153,7 @@ function onListening() {
 }
 
 
-// Use admin helper file if you want a quick way to work on the DB
+// This code will make a new user for you to log in with, only run it once.
 // let admin = require('./admin.js');
 // admin.storeUser(
 //       {
