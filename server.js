@@ -151,3 +151,17 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+// let admin = require('./admin.js');
+// admin.storeTodos([
+//       {
+//         id: 8484848484,
+//         text: "Ice Cream",
+//         complete: false
+//       },
+//       {
+//         id: 6262627272,
+//         text: "Chocolate",
+//         complete: true
+//       },
+// ]);

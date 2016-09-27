@@ -1,28 +1,38 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+let db = require('monk')('localhost/shopping');
+let usersDB = db.get('users');
+let todosDB = db.get('todos');
 
-var passport = require('passport')
+const passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
-var bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt-nodejs');
 
-var todos = [
-      {
-        id: 8484848484,
-        text: "Ice Cream",
-        complete: false
-      },
-      {
-        id: 6262627272,
-        text: "Chocolate",
-        complete: true
-      },
-    ];
+// Memory stores
+
+let todos = {
+
+  update: function (callback) {
+    todosDB.find({}, '-_id').then(function(docs) {
+      todos.list = docs;
+      callback(todos.list);
+    }).catch(function(error) {
+      console.log(error);
+    });
+  },
+
+  list: []
+
+};
+
+todos.update((data) => {
+  //console.log(data);
+});
 
 
+let users = {
 
-// PASSPORT CONFIG
-const users = {
   findOne: function(obj, callback) {
     let user = this.list.filter((item) => {
       return obj.username === item.username;
@@ -30,7 +40,7 @@ const users = {
     if (user.length > 0) {
       console.log('user.password: ', user[0].password);
       user.validPassword = function(passToCheck) {
-        var hash = user[0].password;
+        const hash = user[0].password;
         return bcrypt.compareSync(passToCheck, hash);
       };
       callback(null, user);
@@ -38,12 +48,28 @@ const users = {
       callback(null, false);
     };
   },
-  list: [{ username: "Bob", password: "$2a$10$fmBoV6eHIqiw5ediE1N88OvVCKiT4k4y9IuCTvtjSfLXfFiVBYWxS" },
-         { username: "Rob", password: "DSA"}]
+
+  update: function (callback) {
+    usersDB.find({}, '-_id').then(function(docs) {
+      users.list = docs;
+      console.log('users.list is ', users.list);
+      callback(users.list);
+    }).catch(function(error) {
+      console.log(error);
+    });
+  },
+
+  list: []
+
 };
 
+users.update((data) => {
+  //console.log(data);
+});
 
 
+
+// PASSPORT CONFIG
 passport.use(new LocalStrategy(
   function(username, password, done) {
     console.log('passcheck started, user: ', username, ' pass: ', password);
@@ -93,15 +119,15 @@ router.get('/', function(req, res, next) {
 /* GET for API */
 router.get('/todos', function(req, res, next) {
     if (req.user) {
-      console.log(todos);
-      res.send(todos);
+      console.log(todos.list);
+      res.send(todos.list);
     } else {
       res.redirect('/login');
     }
 });
 
 router.get('/mobile', function(req, res, next) {
-    const todosList = todos.map((todo, index) => {
+    const mobileList = todos.list.map((todo, index) => {
       const have = "We have ";
       const need = "We need ";
       return {
@@ -109,12 +135,17 @@ router.get('/mobile', function(req, res, next) {
         "item": todo.complete ? have + todo.text : need + todo.text,
       }
     });
-    //console.log(todosList);
-    res.render('mobile', {todosList});
+    //console.log(mobileList);
+    res.render('mobile', {mobileList});
 });
 
 router.get('/login', function(req, res, next) {
-    res.render('login');
+  usersDB.find({}, '-_id').then(function(docs) {
+    res.render('login', { docs: JSON.stringify(docs) }); // TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+  }).catch(function(error) {
+    console.log(error);
+  });
+
 });
 
 router.get('/logout', function(req, res){
@@ -124,8 +155,11 @@ router.get('/logout', function(req, res){
 
 router.post('/newTodo', function(req, res, next) {
     if (req.user) {
-      todos.push(req.body);
-      res.send(todos);
+      todosDB.insert(req.body);
+      todos.update((data) => {
+        res.send(data);
+      });
+      //todos.list.push(req.body);
     } else {
       res.redirect('/login');
     }
@@ -134,24 +168,29 @@ router.post('/newTodo', function(req, res, next) {
 
 router.post('/deleteTodo', function(req, res, next) {
     if (req.user) {
-      todos = todos.filter((todo) => {
-        return todo.id !== req.body.id;
+      todosDB.remove({ id: req.body.id })
+      todos.update((data) => {
+        res.send(data);
       });
-      res.send(todos);
     } else {
       res.redirect('/login');
     }
 });
 
 router.post('/completeTodo', function(req, res, next) {
-    //console.log('req.body: ', req.body);
     if (req.user) {
-      todos.forEach((todo) => {
+      todos.list.forEach((todo) => {
       if (todo.id === req.body.id) {
         todo.complete = !todo.complete;
+        todosDB.findOneAndUpdate({ id: todo.id }, { id: todo.id, text: todo.text, complete: todo.complete }).then((updatedDoc) => {
+          todos.update((data) => {
+            res.send(data);
+          });
+        }).catch(function(error) {
+          console.log(error);
+        });
       }
     });
-    res.send(todos);
     } else {
       res.redirect('/login');
     }
@@ -168,6 +207,7 @@ router.get('/getUser', function(req, res, next) {
 
 
 
+// db.close();
 
 
 module.exports = router;
