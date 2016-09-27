@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Shopping List App
 
 Current Status: Pre Alpha (under construction)
@@ -37,3 +38,8 @@ At the bottom of server.js there is some commented out code that will set up a u
 
 
 
+=======
+# shoppinglist
+
+-2016/09/27 This project is under construction
+>>>>>>> origin/master
