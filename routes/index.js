@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-let db = require('monk')('localhost/shopping');
-let usersDB = db.get('users');
-let todosDB = db.get('todos');
+const db = require('monk')('localhost/shopping');
+const usersDB = db.get('users');
+const todosDB = db.get('todos');
 
 const passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
@@ -100,7 +100,7 @@ passport.deserializeUser(function(user, done) {
 
 router.post('/login',
   passport.authenticate('local', { successRedirect: '/',
-                                   failureRedirect: '/login' }));
+                                   failureRedirect: '/invalid' }));
   // function(req, res) {
   //   // If this function gets called, authentication was successful.
   //   // `req.user` contains the authenticated user.
@@ -112,7 +112,7 @@ router.get('/', function(req, res, next) {
     if (req.user) {
       res.render('index');
     } else {
-      res.redirect('/login');
+      res.redirect('/invalid');
     }
 });
 
@@ -122,10 +122,11 @@ router.get('/todos', function(req, res, next) {
       console.log(todos.list);
       res.send(todos.list);
     } else {
-      res.redirect('/login');
+      res.redirect('/invalid');
     }
 });
 
+// Created this to get a list for my iphone which doesnt like react - TODO get react native working
 router.get('/mobile', function(req, res, next) {
     const mobileList = todos.list.map((todo, index) => {
       const have = "We have ";
@@ -140,17 +141,16 @@ router.get('/mobile', function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-  usersDB.find({}, '-_id').then(function(docs) {
-    res.render('login', { docs: JSON.stringify(docs) }); // TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-  }).catch(function(error) {
-    console.log(error);
-  });
-
+  res.render('login');
 });
 
 router.get('/logout', function(req, res){
   req.logout();
   res.redirect('/login');
+});
+
+router.get('/invalid', function(req, res){
+  res.render('login', { msg: "Error: Not authenticated"});
 });
 
 router.post('/newTodo', function(req, res, next) {
@@ -159,11 +159,9 @@ router.post('/newTodo', function(req, res, next) {
       todos.update((data) => {
         res.send(data);
       });
-      //todos.list.push(req.body);
     } else {
-      res.redirect('/login');
+      res.redirect('/invalid');
     }
-    //console.log(req.body);
 });
 
 router.post('/deleteTodo', function(req, res, next) {
@@ -173,7 +171,7 @@ router.post('/deleteTodo', function(req, res, next) {
         res.send(data);
       });
     } else {
-      res.redirect('/login');
+      res.redirect('/invalid');
     }
 });
 
@@ -192,16 +190,15 @@ router.post('/completeTodo', function(req, res, next) {
       }
     });
     } else {
-      res.redirect('/login');
+      res.redirect('/invalid');
     }
 });
 
 router.get('/getUser', function(req, res, next) {
-    //console.log('req.body: ', req.body);
     if (req.user) {
       res.send(req.user);
     } else {
-      res.redirect('/login');
+      res.redirect('/invalid');
     }
 });
 

@@ -38,7 +38,7 @@ app.use(session({ secret: 'thispassword', resave: false, saveUninitialized: fals
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', routes);
+app.use('/', routes); // allow routes/index.js to handle all routing
 
 
 // catch 404 and forward to error handler
@@ -152,16 +152,12 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+
+// Use admin helper file if you want a quick way to work on the DB
 // let admin = require('./admin.js');
-// admin.storeTodos([
+// admin.storeUser(
 //       {
-//         id: 8484848484,
-//         text: "Ice Cream",
-//         complete: false
-//       },
-//       {
-//         id: 6262627272,
-//         text: "Chocolate",
-//         complete: true
-//       },
-// ]);
+//         username: "Amy",
+//         password: "SomeStrongPassword"
+//       }
+// );
