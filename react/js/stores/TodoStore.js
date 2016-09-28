@@ -55,7 +55,7 @@ class TodoStore extends EventEmitter {
       }
       case "GET_USER": {
         this.user = action.user;
-        console.log('storeUser: ', this.user);
+        //console.log('storeUser: ', this.user);
         this.emit("user");
         break;
       }

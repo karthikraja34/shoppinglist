@@ -28,7 +28,7 @@ To start:
 - When thats done type "npm start".
 - Open a web browser and navigate to localhost:8000.
 - You should get a login screen if its working. (You will need to manually insert a login to your DB)
-- Open a new command line in the same directory and run webpack --watch (leave this running in the background)
+- (You may need to "npm install webpack -g") Open a new command line in the same directory and run webpack --watch (leave this running in the background)
 
 You are now ready to work on the code.
 

@@ -26,7 +26,7 @@ export function getUser() {
   axios('/getUser')
   .then(function (axiosResponse) {
     const data = JSON.parse(axiosResponse.request.response);
-    console.log('actionUser: ', data);
+    //console.log('actionUser: ', data);
     dispatcher.dispatch({type: "GET_USER", user: data[0].username});
   })
   .catch(function (error) {
