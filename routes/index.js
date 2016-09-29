@@ -1,10 +1,12 @@
+
+
 const express = require('express');
 const router = express.Router();
 const db = require('monk')('localhost/shopping');
 const usersDB = db.get('users');
 const todosDB = db.get('todos');
 
-const passport = require('passport');
+const passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
 const bcrypt = require('bcrypt-nodejs');
