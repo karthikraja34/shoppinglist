@@ -29,7 +29,7 @@ const admin = {
 		todosArray.forEach((todo) => {
 			todosDB.insert(todo);
 			console.log('inserted todo: ', todo);
-		})
+		});
 	},
 }
 

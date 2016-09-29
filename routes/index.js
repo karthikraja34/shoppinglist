@@ -4,7 +4,7 @@ const db = require('monk')('localhost/shopping');
 const usersDB = db.get('users');
 const todosDB = db.get('todos');
 
-const passport = require('passport')
+const passport = require('passport');
   , LocalStrategy = require('passport-local').Strategy;
 
 const bcrypt = require('bcrypt-nodejs');
@@ -98,6 +98,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 
+// ROUTES
 router.post('/login',
   passport.authenticate('local', { successRedirect: '/',
                                    failureRedirect: '/invalid' }));
@@ -166,7 +167,7 @@ router.post('/newTodo', function(req, res, next) {
 
 router.post('/deleteTodo', function(req, res, next) {
     if (req.user) {
-      todosDB.remove({ id: req.body.id })
+      todosDB.remove({ id: req.body.id });
       todos.update((data) => {
         res.send(data);
       });
@@ -178,17 +179,18 @@ router.post('/deleteTodo', function(req, res, next) {
 router.post('/completeTodo', function(req, res, next) {
     if (req.user) {
       todos.list.forEach((todo) => {
-      if (todo.id === req.body.id) {
-        todo.complete = !todo.complete;
-        todosDB.findOneAndUpdate({ id: todo.id }, { id: todo.id, text: todo.text, complete: todo.complete }).then((updatedDoc) => {
-          todos.update((data) => {
-            res.send(data);
+        if (todo.id === req.body.id) {
+          todo.complete = !todo.complete;
+          todosDB.findOneAndUpdate({ id: todo.id }, { id: todo.id, text: todo.text, complete: todo.complete })
+          .then((updatedDoc) => {
+            todos.update((data) => {
+              res.send(data);
+            });
+          }).catch(function(error) {
+            console.log(error);
           });
-        }).catch(function(error) {
-          console.log(error);
-        });
-      }
-    });
+        }
+      });
     } else {
       res.redirect('/invalid');
     }

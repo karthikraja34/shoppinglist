@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Shopping List App
 
 Current Status: Pre Alpha (under construction)
@@ -10,11 +9,11 @@ www.youtube.com/watch?v=MhkGQAoc7bc&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b
 I integrated it with node js as a backend with some data endpoints set up
 
 Core packages
-Web Server: Express v4
-View Engine: Handlebars
-Database: MongoDB (using Monk middleware)
-Auth: Passport local strategy (hard coded login details at the moment)
-AJAX Helper: Axios
+- Web Server: Express v4
+- View Engine: Handlebars
+- Database: MongoDB (using Monk middleware)
+- Auth: Passport local strategy (hard coded login details at the moment)
+- AJAX Helper: Axios
 
 Look at the package.json file for more details
 
