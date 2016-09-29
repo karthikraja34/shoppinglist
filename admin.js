@@ -1,6 +1,8 @@
-let db = require('monk')('localhost/shopping');
-let usersDB = db.get('users');
-let todosDB = db.get('todos');
+"use strict"
+
+const db = require('monk')('localhost/shopping');
+const usersDB = db.get('users');
+const todosDB = db.get('todos');
 const bcrypt = require('bcrypt-nodejs');
 
 const admin = {
