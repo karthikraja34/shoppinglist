@@ -29,6 +29,7 @@ export default class Featured extends React.Component {
   }
 
   componentWillUnmount() {
+    TodoStore.removeListener("user", this.setUser);
     TodoStore.removeListener("change", this.getTodos);
     TodoStore.removeListener("filter", this.getFilteredTodos);
   }
