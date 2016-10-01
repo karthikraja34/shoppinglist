@@ -9,10 +9,12 @@ var hbs = require('express-handlebars');
 var React = require('react');
 var session = require('express-session');
 var passport = require('passport');
+const helmet = require('helmet');
 
 var routes = require('./routes/index');
 
 var app = express();
+
 var http = require('http');
 var server = http.Server(app);
 
@@ -28,13 +30,27 @@ app.set('view engine', 'hbs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(helmet());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.disable('x-powered-by'); // security feature to disallow detection of express running on node
-app.use(session({ secret: 'thispassword', resave: false, saveUninitialized: false }));
+//app.disable('x-powered-by'); // helmet does this
+app.use(session({  
+  resave: false, 
+  saveUninitialized: false,
+  secret: 'saltySaltCookieSalt',
+  key: 'cookieSessionId', 
+  cookie: {
+    httpOnly: true,
+//    secure: true, // enable this for HTTPS
+    domain: 'onfiredude.com',
+    path: '/',
+    // Cookie will expire in 1 hour from when it's generated 
+    expires: new Date( Date.now() + 60 * 60 * 1000 )
+  }
+}));
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 app.use(passport.initialize());
