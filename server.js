@@ -45,7 +45,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
 //    secure: true, // enable this for HTTPS
-    domain: 'onfiredude.com',
+    domain: 'localhost', // the domain your server is using
     path: '/',
     // Cookie will expire in 1 hour from when it's generated 
     expires: new Date( Date.now() + 60 * 60 * 1000 )
