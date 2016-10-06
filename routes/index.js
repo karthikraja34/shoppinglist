@@ -107,7 +107,7 @@ router.post('/login',
   // function(req, res) {
   //   // If this function gets called, authentication was successful.
   //   // `req.user` contains the authenticated user.
-  //   // req.isAuthenticated() can be called to check if a request has been authenticated
+  //   // `req.isAuthenticated()` can be called to check if a request has been authenticated
   //   res.redirect('/users/' + req.user.username);
   //});
 
