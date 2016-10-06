@@ -107,12 +107,13 @@ router.post('/login',
   // function(req, res) {
   //   // If this function gets called, authentication was successful.
   //   // `req.user` contains the authenticated user.
+  //   // req.isAuthenticated() can be called to check if a request has been authenticated
   //   res.redirect('/users/' + req.user.username);
   //});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    if (req.user) {
+    if (req.isAuthenticated()) {
       res.render('index');
     } else {
       res.redirect('/invalid');
@@ -121,7 +122,7 @@ router.get('/', function(req, res, next) {
 
 /* GET for API */
 router.get('/todos', function(req, res, next) {
-    if (req.user) {
+    if (req.isAuthenticated()) {
       console.log(todos.list);
       res.send(todos.list);
     } else {
@@ -157,7 +158,7 @@ router.get('/invalid', function(req, res){
 });
 
 router.post('/newTodo', function(req, res, next) {
-    if (req.user) {
+    if (req.isAuthenticated()) {
       todosDB.insert(req.body);
       todos.update((data) => {
         res.send(data);
@@ -168,7 +169,7 @@ router.post('/newTodo', function(req, res, next) {
 });
 
 router.post('/deleteTodo', function(req, res, next) {
-    if (req.user) {
+    if (req.isAuthenticated()) {
       todosDB.remove({ id: req.body.id });
       todos.update((data) => {
         res.send(data);
@@ -179,7 +180,7 @@ router.post('/deleteTodo', function(req, res, next) {
 });
 
 router.post('/completeTodo', function(req, res, next) {
-    if (req.user) {
+    if (req.isAuthenticated()) {
       todos.list.forEach((todo) => {
         if (todo.id === req.body.id) {
           todo.complete = !todo.complete;
@@ -199,7 +200,7 @@ router.post('/completeTodo', function(req, res, next) {
 });
 
 router.get('/getUser', function(req, res, next) {
-    if (req.user) {
+    if (req.isAuthenticated()) {
       res.send(req.user);
     } else {
       res.redirect('/invalid');
